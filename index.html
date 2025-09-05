@@ -23,16 +23,6 @@
       background: rgba(11,21,32,.75);
       border-bottom: 1px solid #102437;
     }
-    input, button {
-      display: block;
-      margin: 10px 0;
-      padding: 10px;
-      width: 100%;
-      max-width: 300px;
-    }
-    main {
-      padding: 20px;
-    }
   </style>
 </head>
 <body>
@@ -46,19 +36,20 @@
       <h2>Login</h2>
       <input id="email" type="email" placeholder="Email" />
       <input id="password" type="password" placeholder="Senha" />
-      <button id="login-btn">Entrar</button>
-      <button id="signup-btn">Criar conta</button>
+      <button onclick="login()">Entrar</button>
+      <button onclick="signup()">Criar conta</button>
     </section>
 
     <section id="app-section" style="display:none;">
       <h2>Seus Contatos</h2>
       <input id="name" placeholder="Nome do contato" />
       <input id="phone" placeholder="Telefone" />
-      <button id="save-btn">Salvar Contato</button>
+      <button onclick="saveContact()">Salvar Contato</button>
       <ul id="contacts"></ul>
     </section>
   </main>
 
+  <!-- Firebase + Lógica -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -97,14 +88,11 @@
     function saveContact() {
       const name = document.getElementById("name").value.trim();
       const phone = document.getElementById("phone").value.trim();
-
       if (!name || !phone) {
         alert("Preencha nome e telefone antes de salvar.");
         return;
       }
-
       const uid = auth.currentUser?.uid || "anon";
-
       if (!uid || uid === "anon") {
         const local = JSON.parse(localStorage.getItem("my_contacts") || "[]");
         local.push({ name, phone });
@@ -112,7 +100,6 @@
         alert("Contato salvo localmente (usuário não autenticado).");
         return;
       }
-
       addDoc(collection(db, "contacts"), {
         uid,
         name,
@@ -140,7 +127,6 @@
       });
     }
 
-    // Autenticação
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById("login-section").style.display = "none";
@@ -154,28 +140,20 @@
       }
     });
 
-    // Eventos de clique (por padrão em type="module")
-    document.getElementById("login-btn").addEventListener("click", login);
-    document.getElementById("signup-btn").addEventListener("click", signup);
-    document.getElementById("save-btn").addEventListener("click", saveContact);
+    // Corrige visibilidade das funções no escopo global
+    window.login = login;
+    window.signup = signup;
+    window.saveContact = saveContact;
   </script>
 
-  <!-- BOT DE ATENDIMENTO COM GEMINI -->
+  <!-- Chatbot com Gemini -->
   <script>
     window.PIXELUP_BOT_CONFIG = {
-      API_URL: "https://api.pixelup.app/gemini", // Altere aqui se for outro domínio
-      API_TOKEN: "SUA_API_KEY_DO_GEMINI",        // 🔐 Substitua pela sua API Key
+      API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro:generateContent",
+      API_TOKEN: "SUA_CHAVE_AQUI", // 🔁 Substitua pela sua chave da Gemini
       WA_BOT_SCRIPT: "wa-bot/wa-bot.js"
     };
   </script>
-  <script src="wa-bot/wa-bot.js" defer></script>
+  <script src="wa-bot/wa-bot.js"></script>
 </body>
 </html>
-<script>
-  window.PIXELUP_BOT_CONFIG = {
-    API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
-    API_TOKEN: "SUA_API_KEY_DO_GEMINI",
-    WA_BOT_SCRIPT: "wa-bot/wa-bot.js"
-  };
-</script>
-<script src="wa-bot/wa-bot.js"></script>
