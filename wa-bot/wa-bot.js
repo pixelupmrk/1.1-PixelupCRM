@@ -1,4 +1,12 @@
-(async function () {
+(async function (<script>
+  window.PIXELUP_BOT_CONFIG = {
+    API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+    API_TOKEN: "AIzaSyC-EXEMPLO-CHAVE-MINAI-1234567890",
+    BOT_NAME: "Bot PixelUp",
+    WA_BOT_SCRIPT: "wa-bot/wa-bot.js"
+  };
+</script>
+) {
   const config = window.PIXELUP_BOT_CONFIG || {};
   const API_URL = config.API_URL;
   const API_TOKEN = config.API_TOKEN;
