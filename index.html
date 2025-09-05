@@ -95,7 +95,21 @@
   <script>
     window.PIXELUP_BOT_CONFIG = {
       API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
-      API_TOKEN: "SUA_CHAVE_GEMINI_AQUI", // <== Substitua aqui pela sua chave Gemini real
+      API_TOKEN: "SUA_CHAVE_GEMINI_AQUI", curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent" \
+  -H 'Content-Type: application/json' \
+  -H 'X-goog-api-key: GEMINI_API_KEY' \
+  -X POST \
+  -d '{
+    "contents": [
+      {
+        "parts": [
+          {
+            "text": "Explain how AI works in a few words"
+          }
+        ]
+      }
+    ]
+  }'
       BOT_NAME: "Bot PixelUp",
       WA_BOT_SCRIPT: "wa-bot/wa-bot.js"
     };
