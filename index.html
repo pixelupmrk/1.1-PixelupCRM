@@ -3,116 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CRM PixelUp — Contatos</title>
+  <title>PixelUp CRM — Chat com IA</title>
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box }
     body {
       margin: 0;
-      font-family: Inter, system-ui, sans-serif;
-      background: linear-gradient(rgba(8,12,18,.82), rgba(8,12,18,.82)), url('pixelup-bg.jpg') center/cover fixed no-repeat;
-      color: #eaf6ff;
-    }
-    .topbar {
-      padding: 14px 20px;
-      background: rgba(11,21,32,.85);
-      border-bottom: 1px solid #102437;
-      text-align: center;
-    }
-    main {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(#080c12, #0d1117);
+      color: #fff;
       padding: 20px;
     }
-    input, button {
-      display: block;
-      margin: 8px 0;
-      padding: 10px;
-      width: 100%;
-      max-width: 300px;
-      border-radius: 4px;
-      border: none;
-    }
-    button {
-      background: #00bfff;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
+    h1 {
+      color: #00bfff;
+      text-align: center;
     }
     ul {
       list-style: none;
-      padding-left: 0;
+      padding: 0;
     }
     li {
-      background: rgba(255,255,255,0.1);
-      margin: 5px 0;
-      padding: 8px;
-      border-radius: 4px;
+      background: #111;
+      padding: 10px;
+      margin-bottom: 8px;
+      border-radius: 6px;
     }
   </style>
 </head>
 <body>
 
-  <div class="topbar">
-    <h1>CRM PixelUp</h1>
-  </div>
+  <h1>PixelUp CRM + Bot Gemini 🤖</h1>
+  <p>Seu CRM com assistente inteligente integrado.</p>
 
-  <main>
-    <h2>Seus Contatos</h2>
-    <input id="name" placeholder="Nome do contato" />
-    <input id="phone" placeholder="Telefone" />
-    <button onclick="saveContact()">Salvar Contato</button>
-    <ul id="contacts"></ul>
-  </main>
-
-  <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "SUA_FIREBASE_API_KEY",
-      authDomain: "pixelup-crm.firebaseapp.com",
-      projectId: "pixelup-crm",
-      storageBucket: "pixelup-crm.appspot.com",
-      messagingSenderId: "286127901698",
-      appId: "1:286127901698:web:f4dd954937fad94757ab1b"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    window.saveContact = function() {
-      const name = document.getElementById("name").value.trim();
-      const phone = document.getElementById("phone").value.trim();
-      if (!name || !phone) return alert("Preencha nome e telefone.");
-
-      addDoc(collection(db, "contacts"), { name, phone, createdAt: new Date() })
-        .then(() => {
-          alert("Contato salvo!");
-          document.getElementById("name").value = "";
-          document.getElementById("phone").value = "";
-        })
-        .catch(err => alert("Erro: " + err.message));
-    };
-
-    onSnapshot(collection(db, "contacts"), snapshot => {
-      const list = document.getElementById("contacts");
-      list.innerHTML = "";
-      snapshot.forEach(doc => {
-        const li = document.createElement("li");
-        li.textContent = `${doc.data().name} — ${doc.data().phone}`;
-        list.appendChild(li);
-      });
-    });
-  </script>
+  <ul id="contatos">
+    <!-- Aqui você pode gerar seus contatos dinamicamente, se quiser -->
+  </ul>
 
   <!-- Configuração do BOT com Gemini -->
   <script>
     window.PIXELUP_BOT_CONFIG = {
       API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
-      API_TOKEN: "SUA_CHAVE_GEMINI_AQUI",
-      BOT_NAME: "Bot PixelUp",
+      API_TOKEN: "SUA_CHAVE_GEMINI_AQUI", // ⬅️ curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent" \
+  -H 'Content-Type: application/json' \
+  -H 'X-goog-api-key: GEMINI_API_KEY' \
+  -X POST \
+  -d '{
+    "contents": [
+      {
+        "parts": [
+          {
+            "text": "Explain how AI works in a few words"
+          }
+        ]
+      }
+    ]
+  }'
       WA_BOT_SCRIPT: "wa-bot/wa-bot.js"
     };
   </script>
+
+  <!-- Script do Bot -->
   <script src="wa-bot/wa-bot.js"></script>
+
 </body>
 </html>
