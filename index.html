@@ -3,55 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CRM PixelUp — Contatos</title>
+  <title>CRM PixelUp — Contatos + Bot</title>
   <style>
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      font-family: Inter, system-ui, sans-serif;
       background: linear-gradient(rgba(8,12,18,.82), rgba(8,12,18,.82)), url('pixelup-bg.jpg') center/cover fixed no-repeat;
       color: #eaf6ff;
     }
     .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       padding: 14px 20px;
-      background: rgba(11,21,32,.75);
+      background: rgba(11,21,32,.85);
       border-bottom: 1px solid #102437;
     }
+    main {
+      padding: 20px;
+    }
+    input, button {
+      margin: 6px 0;
+      padding: 10px;
+      width: 100%;
+      max-width: 300px;
+      border-radius: 4px;
+      border: none;
+    }
+    button {
+      background: #00bfff;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    ul { list-style: none; padding-left: 0; }
+    li { background: rgba(255,255,255,0.1); margin: 5px 0; padding: 8px; border-radius: 4px; }
   </style>
 </head>
 <body>
+
   <div class="topbar">
     <h1>CRM PixelUp</h1>
   </div>
 
   <main>
-    <section id="app-section">
-      <h2>Seus Contatos</h2>
-      <input id="name" placeholder="Nome do contato" />
-      <input id="phone" placeholder="Telefone" />
-      <button onclick="saveContact()">Salvar Contato</button>
-      <ul id="contacts"></ul>
-    </section>
+    <h2>Seus Contatos</h2>
+    <input id="name" placeholder="Nome do contato" />
+    <input id="phone" placeholder="Telefone" />
+    <button onclick="saveContact()">Salvar Contato</button>
+    <ul id="contacts"></ul>
   </main>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "SUA_API_KEY_AQUI", // sua chave aqui
+      apiKey: "AIzaSyCjuQZP80sd4FtX83Zp5YgDmySpn7s6GZw",
       authDomain: "pixelup-crm.firebaseapp.com",
       projectId: "pixelup-crm",
       storageBucket: "pixelup-crm.appspot.com",
       messagingSenderId: "286127901698",
-      appId: "1:286127901698:web:f4dd954937fad94757ab1b",
-      measurementId: "G-MBV63RYPN0"
+      appId: "1:286127901698:web:f4dd954937fad94757ab1b"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -71,3 +82,40 @@
         createdAt: new Date()
       }).then(() => {
         alert("Contato salvo com sucesso!");
+        document.getElementById("name").value = "";
+        document.getElementById("phone").value = "";
+      }).catch(err => {
+        alert("Erro ao salvar: " + err.message);
+      });
+    }
+
+    function listenContacts() {
+      const contactsRef = collection(db, "contacts");
+      onSnapshot(contactsRef, (snapshot) => {
+        const list = document.getElementById("contacts");
+        list.innerHTML = "";
+        snapshot.forEach(doc => {
+          const li = document.createElement("li");
+          li.textContent = `${doc.data().name} — ${doc.data().phone}`;
+          list.appendChild(li);
+        });
+      });
+    }
+
+    // Inicia escuta ao carregar a página
+    listenContacts();
+  </script>
+
+  <!-- BOT DE ATENDIMENTO COM IA -->
+  <script>
+    window.PIXELUP_BOT_CONFIG = {
+      API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+      API_TOKEN: "SUA_CHAVE_GEMINI_AQUI",
+      BOT_NAME: "Bot PixelUp",
+      WA_BOT_SCRIPT: "wa-bot/wa-bot.js"
+    };
+  </script>
+  <script src="wa-bot/wa-bot.js"></script>
+
+</body>
+</html>
