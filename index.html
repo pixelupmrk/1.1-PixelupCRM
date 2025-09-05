@@ -1,6 +1,6 @@
- <!DOCTYPE html>
- <html lang="pt-BR">
- <head>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CRM PixelUp — Lista + Kanban + Login</title>
@@ -24,12 +24,13 @@
       border-bottom: 1px solid #102437;
     }
   </style>
- </head>
- <body>
+</head>
+<body>
   <div class="topbar">
     <h1>CRM PixelUp</h1>
     <div id="user-email"></div>
   </div>
+
   <main>
     <section id="login-section">
       <h2>Login</h2>
@@ -38,6 +39,7 @@
       <button onclick="login()">Entrar</button>
       <button onclick="signup()">Criar conta</button>
     </section>
+
     <section id="app-section" style="display:none;">
       <h2>Seus Contatos</h2>
       <input id="name" placeholder="Nome do contato" />
@@ -46,10 +48,12 @@
       <ul id="contacts"></ul>
     </section>
   </main>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyCjuQZP80sd4FtX83Zp5YgDmySpn7s6GZw",
       authDomain: "pixelup-crm.firebaseapp.com",
@@ -59,9 +63,11 @@
       appId: "1:286127901698:web:f4dd954937fad94757ab1b",
       measurementId: "G-MBV63RYPN0"
     };
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+
     function login() {
       const email = document.getElementById("email").value;
       const pass = document.getElementById("password").value;
@@ -69,6 +75,7 @@
         .then(() => alert("Login realizado com sucesso!"))
         .catch(err => alert("Erro no login: " + err.message));
     }
+
     function signup() {
       const email = document.getElementById("email").value;
       const pass = document.getElementById("password").value;
@@ -76,6 +83,7 @@
         .then(() => alert("Conta criada com sucesso!"))
         .catch(err => alert("Erro ao criar conta: " + err.message));
     }
+
     function saveContact() {
       const name = document.getElementById("name").value.trim();
       const phone = document.getElementById("phone").value.trim();
@@ -104,6 +112,7 @@
         alert("Erro ao salvar: " + err.message);
       });
     }
+
     function listenMyContacts(uid) {
       const q = query(collection(db, "contacts"), where("uid", "==", uid));
       onSnapshot(q, (snapshot) => {
@@ -116,6 +125,7 @@
         });
       });
     }
+
     onAuthStateChanged(auth, (user) => {
       if (user) {
         document.getElementById("login-section").style.display = "none";
@@ -129,5 +139,15 @@
       }
     });
   </script>
- </body>
- </html
+
+  <!-- BOT DE ATENDIMENTO PIXELUP -->
+  <script>
+    window.PIXELUP_BOT_CONFIG = {
+      API_URL: "https://seu-endpoint-da-api.com",
+      API_TOKEN: "",
+      WA_BOT_SCRIPT: "wa-bot/wa-bot.js"
+    };
+  </script>
+  <script src="wa-bot/wa-bot.js" defer></script>
+</body>
+</html>
