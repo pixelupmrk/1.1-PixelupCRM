@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CRM PixelUp — Lista + Kanban + Login</title>
+  <title>CRM PixelUp — Contatos</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -28,19 +28,10 @@
 <body>
   <div class="topbar">
     <h1>CRM PixelUp</h1>
-    <div id="user-email"></div>
   </div>
 
   <main>
-    <section id="login-section">
-      <h2>Login</h2>
-      <input id="email" type="email" placeholder="Email" />
-      <input id="password" type="password" placeholder="Senha" />
-      <button onclick="login()">Entrar</button>
-      <button onclick="signup()">Criar conta</button>
-    </section>
-
-    <section id="app-section" style="display:none;">
+    <section id="app-section">
       <h2>Seus Contatos</h2>
       <input id="name" placeholder="Nome do contato" />
       <input id="phone" placeholder="Telefone" />
@@ -49,14 +40,12 @@
     </section>
   </main>
 
-  <!-- Firebase + Lógica -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyCjuQZP80sd4FtX83Zp5YgDmySpn7s6GZw",
+      apiKey: "SUA_API_KEY_AQUI", // sua chave aqui
       authDomain: "pixelup-crm.firebaseapp.com",
       projectId: "pixelup-crm",
       storageBucket: "pixelup-crm.appspot.com",
@@ -66,24 +55,7 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getFirestore(app);
-
-    function login() {
-      const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
-      signInWithEmailAndPassword(auth, email, pass)
-        .then(() => alert("Login realizado com sucesso!"))
-        .catch(err => alert("Erro no login: " + err.message));
-    }
-
-    function signup() {
-      const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
-      createUserWithEmailAndPassword(auth, email, pass)
-        .then(() => alert("Conta criada com sucesso!"))
-        .catch(err => alert("Erro ao criar conta: " + err.message));
-    }
 
     function saveContact() {
       const name = document.getElementById("name").value.trim();
@@ -92,68 +64,10 @@
         alert("Preencha nome e telefone antes de salvar.");
         return;
       }
-      const uid = auth.currentUser?.uid || "anon";
-      if (!uid || uid === "anon") {
-        const local = JSON.parse(localStorage.getItem("my_contacts") || "[]");
-        local.push({ name, phone });
-        localStorage.setItem("my_contacts", JSON.stringify(local));
-        alert("Contato salvo localmente (usuário não autenticado).");
-        return;
-      }
+
       addDoc(collection(db, "contacts"), {
-        uid,
         name,
         phone,
         createdAt: new Date()
       }).then(() => {
         alert("Contato salvo com sucesso!");
-        document.getElementById("name").value = "";
-        document.getElementById("phone").value = "";
-      }).catch(err => {
-        alert("Erro ao salvar: " + err.message);
-      });
-    }
-
-    function listenMyContacts(uid) {
-      const q = query(collection(db, "contacts"), where("uid", "==", uid));
-      onSnapshot(q, (snapshot) => {
-        const list = document.getElementById("contacts");
-        list.innerHTML = "";
-        snapshot.forEach(doc => {
-          const li = document.createElement("li");
-          li.textContent = `${doc.data().name} — ${doc.data().phone}`;
-          list.appendChild(li);
-        });
-      });
-    }
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        document.getElementById("login-section").style.display = "none";
-        document.getElementById("app-section").style.display = "block";
-        document.getElementById("user-email").innerText = user.email;
-        listenMyContacts(user.uid);
-      } else {
-        document.getElementById("login-section").style.display = "block";
-        document.getElementById("app-section").style.display = "none";
-        document.getElementById("user-email").innerText = "";
-      }
-    });
-
-    // Corrige visibilidade das funções no escopo global
-    window.login = login;
-    window.signup = signup;
-    window.saveContact = saveContact;
-  </script>
-
-  <!-- Chatbot com Gemini -->
-  <script>
-    window.PIXELUP_BOT_CONFIG = {
-      API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-pro:generateContent",
-      API_TOKEN: "SUA_CHAVE_AQUI", // 🔁 Substitua pela sua chave da Gemini
-      WA_BOT_SCRIPT: "wa-bot/wa-bot.js"
-    };
-  </script>
-  <script src="wa-bot/wa-bot.js"></script>
-</body>
-</html>
