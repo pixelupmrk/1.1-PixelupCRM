@@ -1,68 +1,36 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PixelUp CRM — Chat com IA</title>
+  <title>CRM PixelUp com Bot</title>
   <style>
-    * { box-sizing: border-box }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(#080c12, #0d1117);
+      background: #0e1013;
       color: #fff;
       padding: 20px;
     }
     h1 {
       color: #00bfff;
-      text-align: center;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    li {
-      background: #111;
-      padding: 10px;
-      margin-bottom: 8px;
-      border-radius: 6px;
     }
   </style>
 </head>
 <body>
+  <h1>CRM PixelUp</h1>
+  <p>Sistema de CRM sem login, com atendimento automático via bot (Gemini).</p>
 
-  <h1>PixelUp CRM + Bot Gemini 🤖</h1>
-  <p>Seu CRM com assistente inteligente integrado.</p>
-
-  <ul id="contatos">
-    <!-- Aqui você pode gerar seus contatos dinamicamente, se quiser -->
-  </ul>
-
-  <!-- Configuração do BOT com Gemini -->
   <script>
+    // Configuração do BOT
     window.PIXELUP_BOT_CONFIG = {
       API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
-      API_TOKEN: "SUA_CHAVE_GEMINI_AQUI", // ⬅️ curl "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent" \
-  -H 'Content-Type: application/json' \
-  -H 'X-goog-api-key: GEMINI_API_KEY' \
-  -X POST \
-  -d '{
-    "contents": [
-      {
-        "parts": [
-          {
-            "text": "Explain how AI works in a few words"
-          }
-        ]
-      }
-    ]
-  }'
+      API_TOKEN: "SUA_CHAVE_GEMINI_AQUI",
+      BOT_NAME: "Bot PixelUp",
       WA_BOT_SCRIPT: "wa-bot/wa-bot.js"
     };
   </script>
-
-  <!-- Script do Bot -->
   <script src="wa-bot/wa-bot.js"></script>
-
 </body>
 </html>
