@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PixelUp CRM — Bot Gemini</title>
+  <style>
+    body { margin:0; font-family: Arial, sans-serif; background:#0e1013; color:#fff; padding:20px; }
+    h1 { color:#00bfff; }
+  </style>
+</head>
+<body>
+  <h1>PixelUp CRM</h1>
+  <p>Bot de atendimento (Gemini) carregado. Abra o balão no canto para testar.</p>
+
+  <!-- Config do Bot -->
+  <script>
+    window.PIXELUP_BOT_CONFIG = {
+      API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+      API_TOKEN: "SUA_CHAVE_GEMINI_AQUI",   // <-- cole sua chave aqui
+      WA_BOT_SCRIPT: "wa-bot/wa-bot.js"
+    };
+  </script>
+
+  <!-- Script do Bot -->
+  <script src="wa-bot/wa-bot.js"></script>
+</body>
+</html>
